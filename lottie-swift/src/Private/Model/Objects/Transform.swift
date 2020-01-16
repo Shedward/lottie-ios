@@ -68,7 +68,7 @@ final class Transform: Codable {
   required init(from decoder: Decoder) throws {
     /**
      This manual override of decode is required because we want to throw an error
-     in the case that there is not position data.
+     in the case that there is no position data.
      */
     let container = try decoder.container(keyedBy: Transform.CodingKeys.self)
     
@@ -77,7 +77,7 @@ final class Transform: Codable {
     
     // Position
     if container.contains(.positionX) || container.contains(.positionY) || container.contains(.positionZ) {
-      // Position dimensions are split into two keyframe groups
+      // Position dimensions are split into three keyframe groups
       self.positionX = try? container.decode(KeyframeGroup<Vector1D>.self, forKey: .positionX)
       self.positionY = try? container.decode(KeyframeGroup<Vector1D>.self, forKey: .positionY)
       self.positionZ = try? container.decode(KeyframeGroup<Vector1D>.self, forKey: .positionZ)
