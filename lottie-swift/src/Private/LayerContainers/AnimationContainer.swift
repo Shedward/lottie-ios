@@ -14,11 +14,11 @@ import QuartzCore
  This layer holds a single composition container and allows for animation of
  the currentFrame property.
  */
-final class AnimationContainer: CALayer {
+final public class AnimationContainer: CALayer {
   
   /// The animatable Current Frame Property
   @NSManaged var currentFrame: CGFloat
-  
+
   var imageProvider: AnimationImageProvider {
     get {
       return layerImageProvider.imageProvider
@@ -43,6 +43,20 @@ final class AnimationContainer: CALayer {
   /// Forces the view to update its drawing.
   func forceDisplayUpdate() {
     animationLayers.forEach( { $0.displayWithFrame(frame: currentFrame, forceUpdates: true) })
+  }
+
+  public func displayUpdate(for frame: CGFloat, forceUpdate: Bool) {
+    animationLayers.forEach( { $0.displayWithFrame(frame: frame, forceUpdates: forceUpdate) })
+  }
+
+  public func updateAnimationFrame(_ newFrame: CGFloat) {
+    CATransaction.begin()
+    CATransaction.setDisableActions(true)
+    currentFrame = newFrame
+    CATransaction.commit()
+    CATransaction.setCompletionBlock {
+      self.forceDisplayUpdate()
+    }
   }
   
   func logHierarchyKeypaths() {
@@ -101,8 +115,23 @@ final class AnimationContainer: CALayer {
   var animationLayers: ContiguousArray<CompositionLayer>
   fileprivate let layerImageProvider: LayerImageProvider
   fileprivate let layerTextProvider: LayerTextProvider
+
+  public convenience init(
+    animation: Animation,
+    imageProvider: AnimationImageProvider? = nil,
+    textProvider: AnimationTextProvider? = nil,
+    scale: CGFloat
+  ) {
+    self.init(
+        animation: animation,
+        imageProvider: imageProvider ?? BundleImageProvider(bundle: Bundle.main, searchPath: nil),
+        textProvider: textProvider ?? DefaultTextProvider()
+    )
+
+    renderScale = scale
+  }
   
-  init(animation: Animation, imageProvider: AnimationImageProvider, textProvider: AnimationTextProvider) {
+  public init(animation: Animation, imageProvider: AnimationImageProvider, textProvider: AnimationTextProvider) {
     self.layerImageProvider = LayerImageProvider(imageProvider: imageProvider, assets: animation.assetLibrary?.imageAssets)
     self.layerTextProvider = LayerTextProvider(textProvider: textProvider)
     self.animationLayers = []
