@@ -229,7 +229,7 @@ extension CATransform3D {
     let anchor = CGAffineTransform(translationX: CGFloat(-anchor.x), y: CGFloat(-anchor.y))
     let scale = CGAffineTransform(scaleX: CGFloat(scale.x / 100.0), y: CGFloat(scale.y / 100.0))
     let translation = CGAffineTransform(translationX: CGFloat(position.x), y: CGFloat(position.y))
-    let rotation = CGAffineTransform(rotationAngle: CGFloat(rotation.z * .pi / 2.0))
+    let rotation = CGAffineTransform(rotationAngle: CGFloat(rotation.z * .pi / 180.0))
 
     let transform = anchor
       .concatenating(scale)
