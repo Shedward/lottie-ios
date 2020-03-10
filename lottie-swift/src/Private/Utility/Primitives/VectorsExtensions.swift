@@ -227,13 +227,13 @@ extension CATransform3D {
                             scale: Vector3D,
                             rotation: Vector3D) -> CATransform3D {
     let translation = CATransform3DMakeTranslation(CGFloat(position.x), CGFloat(position.y), 0.0)
-    let rotation = CATransform3DMakeRotation(CGFloat(rotation.z), 0.0, 0.0, 1.0)
+    //let rotation = CATransform3DMakeRotation(CGFloat(rotation.z), 0.0, 0.0, 1.0)
     let scale = CATransform3DMakeScale(CGFloat(scale.x / 100.0), CGFloat(scale.y / 100.0), 0.0)
     let anchor = CATransform3DMakeTranslation(CGFloat(-anchor.x), CGFloat(-anchor.y), 0.0)
 
     return anchor
       .concat(scale)
-      .concat(rotation)
+      //.concat(rotation)
       .concat(translation)
   }
 }
